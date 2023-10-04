@@ -91,11 +91,9 @@ axios.post("https://localhost:44362/erp/getPhoneBook/", {
     let emptyDep = [];
     let depCode = "";
     let depCount = 0;
-    console.log(queryResult);
 
     response.data.forEach((element, index) => {
         if (element.dCode != depCode) {
-            console.log(element.department);
             let addObj = {
                 name: element.department,
                 member: []
@@ -117,7 +115,6 @@ axios.post("https://localhost:44362/erp/getPhoneBook/", {
                     owner: element.name + " " + element.title,
                     landLine: element.other
                 });
-                console.log(phoneBook.value);
             }
         }
     });

@@ -26,6 +26,7 @@ const dailog = ref("shiftList")
 </template>
 
 <style scoped lang="scss">
+@import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
 .mainFrame {
   .frameHeader {
     height: 50px;

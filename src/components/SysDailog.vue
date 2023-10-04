@@ -29,6 +29,6 @@ let importProps = defineProps({
 }
 
 .modal-ph{
-    --bs-modal-width : 90vw !important;
+    max-width : 90vw !important;
 }
 </style>
