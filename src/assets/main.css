@@ -1,0 +1,11 @@
+@import './base.css';
+@import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+
+#app {
+  margin: 0 auto;
+
+  font-weight: normal;
+  
+  /*font-family: 'Zen Maru Gothic', sans-serif;*/
+  font-family: 'cwTeXYen', serif;
+}
