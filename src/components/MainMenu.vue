@@ -48,7 +48,11 @@
         }
 
         .menuList {
-            font-size: 1.2em;
+            font-size: 1.1em;
+
+            li{
+                padding : 2px;
+            }
 
             .menuItem,
             .menuCase {

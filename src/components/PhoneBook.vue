@@ -35,6 +35,7 @@
         grid-template-columns: 20% auto;
         justify-content: space-between;
         */
+        font-size : 15px;
     }
 
     .depContainer {
@@ -76,8 +77,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import axios from 'axios'
-import swal from "sweetalert2"
-import { arrayBuffer } from 'stream/consumers';
 
 let phoneBook = ref([]);
 
