@@ -3,22 +3,22 @@
         <div class="menuTray">
             <ul class="menuList">
                 <li v-for="menu in menuList"
-                    :class="{ 'hideItem': !menu.show, 'menuItem': menu.sublist.length == 0, 'menuCase': menu.sublist.length > 0 }"
-                    @="menu.sublist.length > 0 ? {'click': openFolder} : {}">
-                    {{ menu.text }}
-                    <ul v-if="menu.sublist.length > 0" class="collapsed">
-                        <li v-for="menu1 in menu.sublist"
-                            :class="{ 'hideItem': !menu1.show, 'menuItem': menu1.sublist.length == 0, 'menuCase': menu1.sublist.length > 0 }"
-                            @="menu1.sublist.length > 0 ? {'click.once' : openFolder} : {}">
+                    :class="{ 'hideItem': !menu.show, 'menuItem': menu.subMenu.length == 0, 'menuCase': menu.subMenu.length > 0 }"
+                    @="menu.subMenu.length > 0 ? {'click': openFolder} : {}">
+                    {{ menu.menuText }}
+                    <ul v-if="menu.subMenu.length > 0" class="collapsed">
+                        <li v-for="menu1 in menu.subMenu"
+                            :class="{ 'hideItem': !menu1.show, 'menuItem': menu1.subMenu.length == 0, 'menuCase': menu1.subMenu.length > 0 }"
+                            @="menu1.subMenu.length > 0 ? {'click.once' : openFolder} : {}">
                             {{
-                                menu1.text }}
-                            <ul v-if="menu1.sublist.length > 0" class="collapsed">
-                                <li v-for="menu2 in menu1.sublist"
-                                    :class="{ 'hideItem': !menu2.show, 'menuItem': menu2.sublist.length == 0, 'menuCase': menu2.sublist.length > 0 }"
-                                    @="menu2.sublist.length > 0 ? {'click.once' : openFolder} : {}">
+                                menu1.menuText }}
+                            <ul v-if="menu1.subMenu.length > 0" class="collapsed">
+                                <li v-for="menu2 in menu1.subMenu"
+                                    :class="{ 'hideItem': !menu2.show, 'menuItem': menu2.subMenu.length == 0, 'menuCase': menu2.subMenu.length > 0 }"
+                                    @="menu2.subMenu.length > 0 ? {'click.once' : openFolder} : {}">
                                     {{
-                                        menu2.text }}
-                                    <ul v-if="menu2.sublist.length > 0" class="collapsed">
+                                        menu2.menuText }}
+                                    <ul v-if="menu2.subMenu.length > 0" class="collapsed">
                                     </ul>
                                 </li>
                             </ul>
@@ -107,197 +107,20 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import swal from "sweetalert2";
+import axios from 'axios'
 declare let $: any
-declare let Swal: any
+const userInfo = JSON.parse(sessionStorage.getItem("userInfo") + "")[0];
+let menuList = ref([]);
 
-const menuList = [
-    {
-        text: "公用資料夾",
-        url: "",
-        active: true,
-        show: true,
-        sublist: [
-            {
-                text: "公佈欄",
-                url: "",
-                active: true,
-                show: true,
-                sublist: []
-            },
-            {
-                text: "電子郵件",
-                url: "",
-                active: true,
-                show: true,
-                sublist: [
-                    {
-                        text: "資料列表",
-                        url: "",
-                        active: true,
-                        show: true,
-                        sublist: []
-                    },
-                    {
-                        text: "關鍵字查詢",
-                        url: "",
-                        active: false,
-                        show: true,
-                        sublist: []
-                    },
-                    {
-                        text: "新增電子郵件",
-                        url: "",
-                        active: false,
-                        show: true,
-                        sublist: []
-                    },
-                    {
-                        text: "刪除電子郵件",
-                        url: "",
-                        active: false,
-                        show: true,
-                        sublist: []
-                    }
-                ]
-            },
-            {
-                text: "智庫",
-                url: "",
-                active: false,
-                show: false,
-                sublist: []
-            },
-            {
-                text: "電子表單",
-                url: "",
-                active: false,
-                show: true,
-                sublist: [
-                    {
-                        text: "請假單",
-                        url: "",
-                        active: true,
-                        show: true,
-                        sublist: []
-                    },
-                    {
-                        text: "請購單",
-                        url: "",
-                        active: false,
-                        show: true,
-                        sublist: []
-                    },
-                    {
-                        text: "文具申請單",
-                        url: "",
-                        active: false,
-                        show: true,
-                        sublist: []
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        text: "財富管理一部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "理財推廣部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "資訊工程部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "營運事業二部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "網路事業部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "營運事業特別一部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "總管理部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "行政部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "營運事業一部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "投資推廣部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "投資管理部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "人事財務部",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "系統維護",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
-    },
-    {
-        text: "網站維護",
-        url: "",
-        active: true,
-        show: true,
-        sublist: []
+axios.post("https://localhost:44362/erp/getSideMenu/", {
+            empNo: userInfo.no,
+        }, {
+    headers: {
     }
-]
+}).then(function (response) {
+    console.log(response.data);
+    menuList.value = response.data;
+})
 
 let openFolder = (e: any) => {
     let Obj = $(e.target).first()[0];
@@ -317,39 +140,5 @@ let openFolder = (e: any) => {
 }
 
 $(() => {
-    /*
-    const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast: any) => {
-            toast.addEventListener('mouseenter', Swal.stopTimer)
-            toast.addEventListener('mouseleave', Swal.resumeTimer)
-        }
-    })
-
-    Toast.fire({
-        icon: 'success',
-        title: '早安! 測試員 您好!'
-    })
-
-    $(".menuCase").on("click", (e : any) => {
-        let Obj = $(e.target).first()[0];
-        let child = $(Obj).children(":first");
-        let folderOpen = !child.hasClass("collapsed");
-        
-        if(child.hasClass("collapsed")){
-            child.removeClass("collapsed");
-            $(Obj).addClass("openFolder");
-        }else{
-            child.addClass("collapsed");
-            $(Obj).removeClass("openFolder");
-        }
-
-        return false;
-    });
-    */
 })
 </script>

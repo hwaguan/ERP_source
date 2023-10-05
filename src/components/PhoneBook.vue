@@ -4,12 +4,12 @@
         <div class="pbListContainer">
             <div class="pbListBody">
                 <div class="depContainer" v-for="dep in phoneBook">
-                    <div class="depName">{{ dep.name }}</div>
+                    <div class="depName">{{ dep.dep }}</div>
                     <div class="depMember">
                         <div class="memCase" v-for="mem in dep.member">
                             <div class="memExt">{{ mem.ext }}</div>
-                            <div class="memName">{{ mem.owner }}</div>
-                            <div class="memLandLine">{{ mem.landLine }}</div>
+                            <div class="memName">{{ mem.name }}</div>
+                            <div class="memLandLine">{{ mem.land_Line }}</div>
                         </div>
                     </div>
                 </div>
@@ -186,57 +186,8 @@ axios.post("https://localhost:44362/erp/getPhoneBook/", {
     headers: {
     }
 }).then(function (response) {
-    let queryResult = response.data;
-    let phoneBookList = [];
-    let noneEmptyDep = [];
-    let emptyDep = [];
-    let depCode = "";
-    let depCount = 0;
-
-    response.data.forEach((element, index) => {
-        if (element.dCode != depCode) {
-            let addObj = {
-                name: element.department,
-                member: []
-            }
-
-            if (element.extenation != "") addObj.member.push({
-                ext: element.extenation,
-                owner: element.name + " " + element.title,
-                landLine: element.other
-            });
-
-            phoneBookList.push(addObj);
-            depCode = element.dCode;
-            depCount++;
-        } else {
-            if (element.extenation != "") {
-                phoneBookList[depCount - 1].member.push({
-                    ext: element.extenation,
-                    owner: element.name + " " + element.title,
-                    landLine: element.other
-                });
-            }
-        }
-    });
-
-    phoneBookList.forEach((dep, index) => {
-        if (dep.member.length > 0) {
-            noneEmptyDep.push(dep);
-        } else {
-            emptyDep.push(dep);
-        }
-    });
-
-    phoneBook.value = noneEmptyDep;
-    /*
-    console.log(phoneBookList);
-    */
-
-    noneEmptyDep.forEach((emp) => {
-        empCount.value += emp.member.length;
-    });
-
-    console.log(empCount.value);
+    console.log(response.data);
+    phoneBook.value = response.data.list;
+    empCount.value = response.data.members;
 })
 </script>
