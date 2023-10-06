@@ -8,7 +8,7 @@
                     <i class="bi-folder"></i>
                     {{ menu.menuText }}
                     <ul v-if="menu.subMenu.length > 0" class="collapsed firstLevel">
-                        <li v-for="menu1 in menu.subMenu"
+                        <li v-for="menu1 in menu.subMenu" class="midLevel"
                             :class="{ 'hideItem': !menu1.show, 'menuItem': menu1.subMenu.length == 0, 'menuCase': menu1.subMenu.length > 0 }"
                             @="menu1.subMenu.length > 0 && menu1.menuLink != '#' ? { 'mouseenter': openFolder, 'mouseleave': openFolder } : menu1.menuLink == '#' ? { 'click.once': openFolder } : {}">
                             <i class="bi bi-hdd" v-if="menu1.subMenu.length == 0"></i>
@@ -111,7 +111,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 declare let $: any
 const userInfo = JSON.parse(sessionStorage.getItem("userInfo") + "")[0];
-let menuList = ref([]);
+let menuList = ref<any>();
 
 axios.post("https://localhost:44362/erp/getSideMenu/", {
     empNo: userInfo.no,
@@ -127,8 +127,6 @@ let openFolder = (e: any) => {
     let Obj = $(e.target).first()[0];
     let child = $(Obj).children().eq(1);
     let icon = $(Obj).children().eq(0);
-
-    $(".firstLevel").addClass("collapsed");
 
     //改變資料夾圖示
     if (icon.hasClass("bi-folder")) {

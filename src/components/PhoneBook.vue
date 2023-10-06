@@ -179,7 +179,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
-let phoneBook = ref([]);
+let phoneBook = ref<any>();
 let empCount = ref(0);
 
 axios.post("https://localhost:44362/erp/getPhoneBook/", {

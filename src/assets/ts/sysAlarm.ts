@@ -207,7 +207,5 @@ export default class sysAlarm {
             footer: footer,
         })
     }
-
-    public confirm
 }
 console.log("test");

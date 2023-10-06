@@ -29,7 +29,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 import swal from "sweetalert2"
-import sysAlarm from "@/assets/ts/sysAlarm.ts"
+import sysAlarm from "@/assets/ts/sysAlarm"
 
 declare let $: any
 declare let Swal: any
