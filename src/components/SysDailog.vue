@@ -12,7 +12,7 @@
 
 <script setup lang="ts">
 import phoneBook from '@/components/PhoneBook.vue'
-import checkHist from '@/components/CheckHistory.vue'
+import checkHist from '@/components/PunchHistory.vue'
 
 let importProps = defineProps({
     dailogType: String,

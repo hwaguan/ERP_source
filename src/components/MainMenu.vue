@@ -107,21 +107,34 @@
 </style>
 
 <script setup lang="ts">
+import { sysConfig } from "@/stores/sysConfig"
+const config = sysConfig()
 import { ref } from 'vue'
 import axios from 'axios'
+import decryptor from "@/assets/ts/tokenDecryptor"
+
 declare let $: any
 const userInfo = JSON.parse(sessionStorage.getItem("userInfo") + "")[0];
+const dec = new decryptor();
 let menuList = ref<any>();
 
-axios.post("https://localhost:44362/erp/getSideMenu/", {
-    empNo: userInfo.no,
-}, {
-    headers: {
-    }
-}).then(function (response) {
-    console.log(response.data);
-    menuList.value = response.data;
-})
+let getMenu = async () => {
+    await axios.post(config.tokenPath).then(async function (response) {
+        let token = dec.decryptToken(response.data.message);
+
+        await axios.post(config.menuPath, {
+            empNo: userInfo.no,
+            requestToken: token,
+        }, {
+            headers: {
+            }
+        }).then(function (response) {
+            menuList.value = response.data;
+        })
+    })
+}
+
+getMenu();
 
 let openFolder = (e: any) => {
     let Obj = $(e.target).first()[0];

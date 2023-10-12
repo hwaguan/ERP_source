@@ -143,7 +143,7 @@ const user = ref(userInfo);
 const alarm = new sysAlarm();
 const now = new Date();
 const greeting = now.getHours() < 11 ? "早安" : now.getHours() > 13 ? "日安" : now.getHours() > 18 ? "晚安" : "日安";
-let dailog_type = "checkHist"
+let dailog_type = ""
 let lastDailog = ""
 let showCount = ref(0);
 

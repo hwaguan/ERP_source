@@ -108,7 +108,7 @@
         .memCase {
             display: grid;
             grid-template-columns: 50px auto 100px;
-                background: rgb(250, 250, 250);
+            background: rgb(250, 250, 250);
 
             .memExt,
             .memName,
@@ -123,8 +123,8 @@
             }
         }
 
-        .memCase:hover{
-            background-color : rgba(0, 89, 255, .1);
+        .memCase:hover {
+            background-color: rgba(0, 89, 255, .1);
         }
     }
 
@@ -176,18 +176,31 @@
 </style>
 
 <script setup lang="ts">
+import { sysConfig } from "@/stores/sysConfig"
+const config = sysConfig()
 import { ref } from 'vue'
 import axios from 'axios'
+import decryptor from "@/assets/ts/tokenDecryptor"
 
+const dec = new decryptor();
 let phoneBook = ref<any>();
 let empCount = ref(0);
 
-axios.post("https://localhost:44362/erp/getPhoneBook/", {
-    headers: {
-    }
-}).then(function (response) {
-    console.log(response.data);
-    phoneBook.value = response.data.list;
-    empCount.value = response.data.members;
-})
+let getPhoneBook = async () => {
+    await axios.post(config.tokenPath).then(async function (response) {
+        let token = dec.decryptToken(response.data.message);
+
+        await axios.post(config.phoneBookPath, {
+            requestToken: token,
+        },{
+            headers: {
+            }
+        }).then(function (response) {
+            phoneBook.value = response.data.list;
+            empCount.value = response.data.members;
+        })
+    })
+}
+
+getPhoneBook();
 </script>

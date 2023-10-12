@@ -26,10 +26,13 @@
 </template>
 
 <script setup lang="ts">
+import { sysConfig } from "@/stores/sysConfig"
+const config = sysConfig()
 import { ref } from 'vue'
 import axios from 'axios'
 import swal from "sweetalert2"
 import sysAlarm from "@/assets/ts/sysAlarm"
+import decryptor from "@/assets/ts/tokenDecryptor"
 
 declare let $: any
 declare let Swal: any
@@ -41,10 +44,11 @@ const login_token = ref(
     }
 );
 
-let login = () => {
+let login = async() => {
     const loginInfo = login_token.value;
     let err_count = 0;
     const alarm = new sysAlarm();
+    const dec = new decryptor();
 
     if (loginInfo.id.replace(" ", "").length == 0) {
         $(".id_alarm").removeClass("hide_alirm");
@@ -58,47 +62,53 @@ let login = () => {
 
     if (err_count > 0) {
         alarm.miniMessage(-1, "警告!! \r\n輸入資料不完整或格式錯誤!", 1000, true);
-    }else{
-        axios.post("https://localhost:44362/erp/login/", {
-            id: loginInfo.id,
-            password: loginInfo.pass
-        }, {
-            headers: {
-            }
-        })
-            .then(function (response) {
-                let queryResult = response.data;
-                /*
-                swal.fire({
-                    icon: "success",
-                    title: "登入成功"
-                });
-                */
+    } else {
 
-                if (queryResult.length > 0) {
-                    sessionStorage.clear();
+        await axios.post(config.tokenPath).then(async function (response) {
+            let token = dec.decryptToken(response.data.message);
 
-                    sessionStorage.setItem("userInfo", JSON.stringify(queryResult));
-
-                    location.href = 'main';
-                } else {
-                    let footer = "<a href='#'>忘記密碼?</a>"
-                    /*
-                swal.fire({
-                    icon: "error",
-                    title: "登入失敗",
-                    text: "請確認您的登入資訊!"
-                });
-                */
-                alarm.centralError("登入失敗", "請確認您的登入資訊!", footer);
+            await axios.post(config.loginPath, {
+                id: loginInfo.id,
+                password: loginInfo.pass,
+                token: token,
+            }, {
+                headers: {
                 }
             })
-            .catch(function (error) {
-                swal.fire({
-                    icon: "warning",
-                    title: "服務器錯誤，請稍候再試"
-                });
-            })
+                .then(function (response) {
+                    let queryResult = response.data;
+                    /*
+                    swal.fire({
+                        icon: "success",
+                        title: "登入成功"
+                    });
+                    */
+
+                    if (queryResult.length > 0) {
+                        sessionStorage.clear();
+
+                        sessionStorage.setItem("userInfo", JSON.stringify(queryResult));
+
+                        location.href = 'main';
+                    } else {
+                        let footer = "<a href='#'>忘記密碼?</a>"
+                        /*
+                    swal.fire({
+                        icon: "error",
+                        title: "登入失敗",
+                        text: "請確認您的登入資訊!"
+                    });
+                    */
+                        alarm.centralError("登入失敗", "請確認您的登入資訊!", footer);
+                    }
+                })
+                .catch(function (error) {
+                    swal.fire({
+                        icon: "warning",
+                        title: "服務器錯誤，請稍候再試"
+                    });
+                })
+        })
     }
 }
 
