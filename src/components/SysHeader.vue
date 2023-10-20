@@ -25,6 +25,7 @@
 
 <style scoped lang="scss">
 .headerFrame {
+    height : 50px;
     display: grid;
     align-items: center;
     grid-template-columns: auto auto auto;

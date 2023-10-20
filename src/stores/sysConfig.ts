@@ -8,6 +8,7 @@ export const sysConfig = defineStore({
         tokenPath : LocalAPIPath + "getTransferToken",
         menuPath : LocalAPIPath + "getSideMenu",
         phoneBookPath : LocalAPIPath + "getPhoneBook",
-        calendarPath : LocalAPIPath + "getMonthlyCalendar"
+        calendarPath : LocalAPIPath + "getMonthlyCalendar",
+        performanceReportPath : LocalAPIPath + "getPerformanceReport"
     })
 })
